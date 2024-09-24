@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>hello world</title>
+  </head>
+  <body>
+    <canvas width="300" height="300" id="canvas"></canvas>
+    <script>
+      // 参考：https://mengsixing.github.io/book/book-webgl.html#webgl-%E6%A0%B8%E5%BF%83-api
+      const canvas = document.getElementById("canvas");
+      const gl = canvas.getContext("webgl");
+      console.log("gl", {
+        gl,
+        canvas,
+      });
+
+      const VSHEADERS_SOURCE = `
+        void main(){
+          gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+          gl_PointSize = 280.0;
+        }
+      `;
+
+      const FSHEADERS_SOURCE = `
+        void main(){
+          gl_FragColor = vec4(0.0, 1.0, 1.0, 1.0);
+        }
+      `;
+
+      initShaders(gl, VSHEADERS_SOURCE, FSHEADERS_SOURCE);
+
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.POINTS, 0, 1);
+
+      function initShaders(gl, VSHEADERS_SOURCE, FSHEADERS_SOURCE) {
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, VSHEADERS_SOURCE);
+
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, FSHEADERS_SOURCE);
+
+        gl.compileShader(vertexShader);
+        gl.compileShader(fragmentShader);
+
+        const program = gl.createProgram();
+        gl.program = program;
+
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+
+        gl.linkProgram(program);
+        gl.useProgram(program);
+      }
+    </script>
+  </body>
+</html>
